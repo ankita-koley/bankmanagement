@@ -1,0 +1,150 @@
+#include <iostream>
+#include <string.h>
+#include <fstream>
+
+using namespace std;
+
+const int max_customers = 10;
+
+struct customer {
+    char customer_name[50];
+    int customer_id;
+};
+
+struct Account {
+    int account_id;
+    int customer_id;
+    int initial_balance;
+    int deposit_amount;
+    int withdraw_amount;
+    int available_balance;
+};
+
+int main() {
+    char selection;
+    customer customers[max_customers];
+    Account accounts[max_customers];
+    int total_customers = 0;
+    int total_accounts = 0;
+
+    do {
+       cout << "<<<<<<<<<<< BANK MANAGMENT SYSTEM >>>>>>>>>>>>>" << endl;
+       cout << "1. Add Customer" << endl;
+       cout << "2. Create Account" << endl;
+       cout << "3. Deposit" << endl;
+       cout << "4. Withdraw" << endl;
+         cout << "5. Display Accounts" << endl;
+       cout << "0. Exit" << endl;
+       cout << "Enter your choice: ";
+       cin >> selection;
+
+       switch (selection) {
+       case '1': {
+            if (total_customers < max_customers) {
+                cout << "Enter customer ID: ";
+                cin >> customers[total_customers].customer_id;
+                cout << "Enter customer name: ";
+                cin >> customers[total_customers].customer_name;
+                total_customers++;
+                cout << "CUSTOMER CREATED SUCCESSFULLY!" << endl;
+                cout<<endl;
+        } else {
+            cout << "Cannot add more customers. Maximum limit reached." << endl;
+            cout<<endl;
+        }
+        break;
+    }
+
+    case '2': {
+        if (total_accounts < max_customers) {
+            cout << "Enter account ID: ";
+            cin >> accounts[total_accounts].account_id;
+            cout << "Enter customer ID for the account: ";
+            cin >> accounts[total_accounts].customer_id;
+            cout << "Enter initial balance: ";
+            cin >> accounts[total_accounts].initial_balance;
+            accounts[total_accounts].available_balance = accounts[total_accounts].initial_balance;
+            total_accounts++;
+            cout << "ACCOUNT CREATED SUCCESSFULLY!" << endl;
+            cout<<endl;
+        } else {
+            cout << "Cannot create more accounts. Maximum limit reached." << endl;
+            cout<<endl;
+        }
+        break;
+    }
+
+    case '3': {
+        int account_id;
+        cout << "Enter account ID for Deposit: ";
+        cin >> account_id;
+        int i;
+        for (i = 0; i < total_accounts; ++i) {
+            if (account_id == accounts[i].account_id) {
+                cout << "Enter deposit amount: ";
+                cin >> accounts[i].deposit_amount;
+                accounts[i].available_balance += accounts[i].deposit_amount;
+                cout << "SUCCESSFULLY DEPOSITED! AVAILABLE BALANCE IS: " << accounts[i].available_balance << endl;
+                cout<<endl;
+                break;
+            }
+        }    
+        if (i == total_accounts) {
+           cout << "Account with ID" << account_id << "not found." << endl;
+           cout<<endl;
+        }
+        break;
+    }
+
+    case '4': {
+        int account_id;
+        cout << "Enter account ID for Withdrawal: ";
+        cin >> account_id;
+        int i;
+        for (i = 0; i < total_accounts; ++i) {
+            if (account_id == accounts[i].account_id) {
+               cout << "Enter withdrawal amount: ";
+               cin >> accounts[i].withdraw_amount;
+               if (accounts[i].withdraw_amount > accounts[i].available_balance) {
+                  cout << "Insufficient balance for withdrawal." << endl;
+                  break;
+            }
+            accounts[i].available_balance = accounts[i].withdraw_amount;
+            cout << "WITHDRAWAL SUCCESSFUL! NEW BALANCE: " << accounts[i].available_balance << endl;
+            cout<<endl;
+            break;
+        }
+    }        
+     if (i == total_accounts) {
+        cout << "Account with ID" << account_id << "not found." << endl;
+    }
+    break;
+}
+
+case '5': {
+    cout << "--- Account Details ---" << endl;
+    for (int i = 0; i < total_accounts; i++) {
+        cout << "Customer ID: " << accounts[i].customer_id << endl;
+        cout << "Account ID: " << accounts[i].account_id << endl;
+        cout << "Balance: " << accounts[i].available_balance << endl;
+        cout << "-----------------" << endl;
+    }
+    cout << endl;
+    break;
+}
+
+case '0': {
+    cout << "************ EXIT PROGRAM ************" << endl;
+    break;
+}
+
+default: {
+    cout << "INVALID CHOICE. PLEASE TRY AGAIN." << endl;
+    cout << endl;
+    break;
+}
+}
+} while (selection != '0');
+
+return 0;
+}
